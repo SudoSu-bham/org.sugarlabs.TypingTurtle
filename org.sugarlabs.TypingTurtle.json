@@ -48,6 +48,10 @@
                 {
                     "type": "patch",
                     "path": "typingturtle-titlescene.patch"
+                },
+                {
+                    "type": "patch",
+                    "path": "typingturtle-keyboard.patch"
                 }
             ],
             "post-install": [
