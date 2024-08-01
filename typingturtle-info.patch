@@ -12,7 +12,7 @@ index 7e9a26f..4f689a8 100644
  icon = Activity-typingturtle
  exec = sugar-activity3 typingturtle.TypingTurtle
 -summary = Need some help typing? Here you will learn the best way to hold your hands in order for you to become a faster typist!
-+summary = Typing Turtle is an interactive touch typing program.
++summary = It is a touch typing activity
 +description = Need some help typing? Here you will learn the best way to hold your hands in order for you to become a faster typist! It gradually introduces the keys on the keyboard through a series of lessons, until the student has learned the entire keyboard.
  repository = https://github.com/sugarlabs/typing-turtle-activity
 -tags = Language;System;Game
