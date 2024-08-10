@@ -1,0 +1,115 @@
+diff --git a/keyboard.py b/keyboard.py
+index 621f71c..71cdb0d 100644
+--- a/keyboard.py
++++ b/keyboard.py
+@@ -28,9 +28,6 @@ from gi.repository import GdkPixbuf
+ 
+ import io
+ import json
+-import subprocess
+-from layouts.olpc import OLPC_LAYOUT
+-from layouts.olpcm import OLPCM_LAYOUT
+ 
+ # Tweaking variables.
+ HAND_YOFFSET = -15
+@@ -97,28 +94,6 @@ KEY_PROPS = [
+     { 'name': 'key-pressed', 'default': False },
+ ]
+ 
+-def _is_olpcm_model():
+-    """Check via setxkbmap if the keyboard model is olpcm.
+-
+-    Keyboard model code is 'olpcm' for non-membrane, mechanical
+-    keyboard, and 'olpc' for membrane keyboard.
+-
+-    """
+-    code = None
+-    p = subprocess.Popen(["setxkbmap", "-query"], stdout=subprocess.PIPE)
+-    out, err = p.communicate()
+-    
+-    for line in out.decode('utf-8').splitlines():
+-        if line.startswith('model:'):
+-            code = line.split()[1]
+-    return code == 'olpcm'
+-
+-def get_layout():
+-    if _is_olpcm_model():
+-        return OLPCM_LAYOUT
+-    else:
+-        return OLPC_LAYOUT
+-
+ 
+ class KeyboardImages:
+     def __init__(self, width, height):
+@@ -137,8 +112,6 @@ class KeyboardImages:
+         # This is for not changing all the numbers of olpcm layout,
+         # that was made based on the original olpc layout.
+         scale_width = self.width
+-        if _is_olpcm_model():
+-            scale_width = int(scale_width * 1.1625)
+ 
+         filename = 'images/' + name
+ 
+diff --git a/keybuilder.py b/keybuilder.py
+index bb5930c..bae1075 100755
+--- a/keybuilder.py
++++ b/keybuilder.py
+@@ -18,6 +18,7 @@
+ 
+ import sys
+ import keyboard
++from layouts.olpc import OLPC_LAYOUT
+ 
+ from gi.repository import Gtk
+ 
+@@ -35,7 +36,7 @@ try:
+     k.load_letter_map(sys.argv[1])
+ except:
+     pass
+-k.set_layout(keyboard.get_layout())
++k.set_layout(OLPC_LAYOUT)
+ 
+ savebtn = Gtk.Button()
+ savebtn.add(Gtk.Label(label='Save Keys'))
+diff --git a/lessonbuilder.py b/lessonbuilder.py
+index 7706312..a34274b 100755
+--- a/lessonbuilder.py
++++ b/lessonbuilder.py
+@@ -29,6 +29,7 @@ from gi.repository import Gtk
+ 
+ # Import keyboard data.
+ import keyboard
++from layouts.olpc import OLPC_LAYOUT
+ 
+ def error(s):
+     print(("lessonbuilder: ERROR: ", s)) 
+@@ -311,7 +312,7 @@ def build_key_steps(
+     except:
+         kb.load_letter_map('lessons/en_US.key')
+ 
+-    kb.set_layout(keyboard.get_layout())
++    kb.set_layout(OLPC_LAYOUT)
+ 
+     keynames = new_keys[0]
+     if len(new_keys) >= 2:
+diff --git a/lessonscreen.py b/lessonscreen.py
+index a4491db..aa460c4 100644
+--- a/lessonscreen.py
++++ b/lessonscreen.py
+@@ -29,6 +29,7 @@ from sugar3.graphics import *
+ 
+ # Import activity modules.
+ import keyboard, medalscreen
++from layouts.olpc import OLPC_LAYOUT
+ 
+ # Paragraph symbol unicode character.
+ PARAGRAPH_CODE = '\xb6'
+@@ -138,7 +139,7 @@ class LessonScreen(Gtk.VBox):
+         except:
+             pass
+ 
+-        self.keyboard.set_layout(keyboard.get_layout())
++        self.keyboard.set_layout(OLPC_LAYOUT)
+ 
+         self.pack_start(hbox, False, False, 10)
+         self.pack_start(frame, True, True, 0)
